@@ -1,0 +1,58 @@
+import sqlite3
+
+# Connect to the database (or create it if it doesn't exist)
+conn = sqlite3.connect('mydatabase.db')
+cursor = conn.cursor()
+
+# CREATE TABLE statement
+create_table_sql = """
+CREATE TABLE phone (
+    phone_id INT,
+    country_code INT NOT NULL,
+    phone_number INT NOT NULL,
+    phone_type VARCHAR(12),
+    PRIMARY KEY(phone_id)
+);
+"""
+
+cursor.execute(create_table_sql)
+
+# SELECT statement
+select_sql = """
+SELECT phone_number
+FROM phone
+WHERE country_code = 'US';
+"""
+
+cursor.execute(select_sql)
+result = cursor.fetchall()
+for row in result:
+    print("Phone Number:", row[0])
+
+# UPDATE statement
+update_sql = """
+UPDATE phone
+SET phone_type = 'MOBILE'
+WHERE phone_type = 'CELLULAR';
+"""
+
+cursor.execute(update_sql)
+conn.commit()
+
+# DELETE statement
+delete_sql = """
+DELETE FROM phone
+WHERE country_code = 'XX';
+"""
+
+cursor.execute(delete_sql)
+conn.commit()
+
+# DROP TABLE statement
+drop_table_sql = "DROP TABLE IF EXISTS phone;"
+
+cursor.execute(drop_table_sql)
+conn.commit()
+
+# Close the database connection
+conn.close()
